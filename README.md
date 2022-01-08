@@ -23,9 +23,9 @@ There are a lot of [Geospatial File Formats](https://en.wikipedia.org/wiki/GIS_f
 
 ## External Libraries 📚
 This project would not be possible if it weren't for three core libraries that drive it:
-* @tmcw/togeojson - Supported by [placemark.io](https:placemark.io) - `KML`, `GPX`, `TCX` support
-* csv2geojson - Supported by [Mapbox](https://mapbox.com) - `CSV`, `TSV` support
-* topojson-client - From [Mike Bostock](https://github.com/mbostock) - `Topojson` support
+* `@tmcw/togeojson` - Supported by [placemark.io](https:placemark.io) - `KML`, `GPX`, `TCX` support
+* `csv2geojson` - Supported by [Mapbox](https://mapbox.com) - `CSV`, `TSV` support
+* `topojson-client` - From [Mike Bostock](https://github.com/mbostock) - `Topojson` support
 
 I'd also like to thank the Mapbox🚀 and Maplibre teams for creating such a great project that is easily extendable.
 
