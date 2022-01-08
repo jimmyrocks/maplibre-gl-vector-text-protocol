@@ -6,12 +6,12 @@ It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pul
 It can be used with MapboxGLJS 1.x.x using the (mapbox-gl-custom-protocol)[https://www.github.com/jimmyrocks/mapbox-gl-custom-protocol] library. I haven't tested it with MapboxGLJS 2+.
 
 ## Supported Formats 🗎
-* (`Topojson`)[https://en.wikipedia.org/wiki/GeoJSON#TopoJSON] - A more compact JSON based format than (GeoJSON)[https://en.wikipedia.org/wiki/GeoJSON] that takes advantage of shared **topo**logies.
-* (`KML`)[https://en.wikipedia.org/wiki/Keyhole_Markup_Language] - **K**eyhole **M**arkup **L**anguage, popularized by (Google Earth)[https://en.wikipedia.org/wiki/Google_Earth].
-* (`GPX`)[https://en.wikipedia.org/wiki/GPS_Exchange_Format] - **G****P**S E**x**change Format - A common XML-based format used by may GPS devices.
-* (`TCX`)[https://en.wikipedia.org/wiki/Training_Center_XML] - **T**raining **C**enter **X**ML - An XML-based format used by various Garmin devices and applications (e.g. (Garmin Connect)[https://connect.garmin.com]).
-* (`CSV`)[https://en.wikipedia.org/wiki/Comma-separated_values] - **C**omma-**S**eparated **V**alues, the old reliable of data formats. No options are exposed, Latitude fields must start with "lat" and Longitude fields must start with "lon" or "lng". Will also work with bar (|) and tab (\t) separated values.
-* (`TSV`)[] - **T**ab-**S**eparated **V**alue - Same as CSV, but it forces the delimiter to be a tab character (\t).
+* [`Topojson`](https://en.wikipedia.org/wiki/GeoJSON#TopoJSON) - A more compact JSON based format than (GeoJSON)[https://en.wikipedia.org/wiki/GeoJSON] that takes advantage of shared **topo**logies.
+* [`KML`](https://en.wikipedia.org/wiki/Keyhole_Markup_Language) - **K**eyhole **M**arkup **L**anguage, popularized by (Google Earth)[https://en.wikipedia.org/wiki/Google_Earth].
+* [`GPX`](https://en.wikipedia.org/wiki/GPS_Exchange_Format) - **G****P**S E**x**change Format - A common XML-based format used by may GPS devices.
+* [`TCX`](https://en.wikipedia.org/wiki/Training_Center_XML) - **T**raining **C**enter **X**ML - An XML-based format used by various Garmin devices and applications (e.g. (Garmin Connect)[https://connect.garmin.com]).
+* [`CSV`](https://en.wikipedia.org/wiki/Comma-separated_values) - **C**omma-**S**eparated **V**alues, the old reliable of data formats. No options are exposed, Latitude fields must start with "lat" and Longitude fields must start with "lon" or "lng". Will also work with bar (|) and tab (\t) separated values.
+* [`TSV`](https://en.wikipedia.org/wiki/Tab-separated_values) - **T**ab-**S**eparated **V**alue - Same as CSV, but it forces the delimiter to be a tab character (\t).
 
 ## Objective ✨
 The [`addProtocol`](https://github.com/maplibre/maplibre-gl-js/blob/492bec58c5684609af8fba81ef01e5f5a3ef0711/src/index.js#L177) feature makes it extremely easy to extend the existing functionality of Maplibre sources without creating a new source type using the (addSourceType)[https://github.com/maplibre/maplibre-gl-js/blob/d375def728d23b9d443a4dcaab0fd06df912223e/src/ui/map.ts#L1583] feature. This makes it very easy to support all kinds of new things in Maplibre. 
@@ -32,8 +32,7 @@ I'd also like to thank the Mapbox🚀 and Maplibre teams for creating such a gre
 ## Usage 🛠️
 
 ```javascript
-        <script src="https://loc8.us/maplibregl-vector-text-protocol/dist/maplibregl-vector-text-protocol.js"></script>
-
+<script src="https://loc8.us/maplibregl-vector-text-protocol/dist/maplibregl-vector-text-protocol.js"></script>
 
 // Add all types
 VectorTextProtocol.addProtocols(maplibregl);
