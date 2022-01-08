@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- EXTREMELY SIMPLE maplibregl Map (adapted from https://maplibre.org/maplibre-gl-js-docs/example/simple-map/)-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Display a map with an XML, CSV, or TopoJSON Overlay</title>
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+        <script src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+        <link href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" rel="stylesheet" />
+        <script src="../dist/maplibregl-vector-text-protocol.js"></script>
+        <link href="./index.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="map"></div>
+    </body>
+    <script>
+        const map = new maplibregl.Map({
+            container: 'map', // container id
+            style: 'https://demotiles.maplibre.org/style.json', // style URL
+            center: [-95, 37.5], // starting position [lng, lat]
+            zoom: 3 // starting zoom
+        });
+
+        // Add the sources for all the types
+        VectorTextProtocol.addProtocols(maplibregl);
+
+        map.on('load', () => {
+
+            map.addSource('us-congress-113', {
+                'type': 'geojson',
+                'data': 'topojson://https://gist.githubusercontent.com/mbostock/4090846/raw/07e73f3c2d21558489604a0bc434b3a5cf41a867/us-congress-113.json',
+            });
+
+            map.addLayer({
+                'id': 'us-congress-113-fill',
+                'type': 'fill',
+                'source': 'us-congress-113',
+                'minzoom': 0,
+                'maxzoom': 20,
+                'paint': {
+                    'fill-opacity': 0.25,
+                    'fill-color': 'yellow',
+                    'fill-outline-color': 'gray'
+                }
+            });
+        });
+    </script>
+</html>

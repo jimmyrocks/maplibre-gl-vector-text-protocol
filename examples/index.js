@@ -1,0 +1,107 @@
+import { addProtocols } from "../dist/maplibregl-vector-text-protocol.es.js";
+import { default as layerSelector} from "./layerSelector.js";
+
+
+const map = new maplibregl.Map({
+    container: 'map', // container id
+    style: 'https://demotiles.maplibre.org/style.json', // style URL
+    center: [-74.8306, 39.06], // starting position [lng, lat]
+    zoom: 9 // starting zoom
+});
+
+// Add the sources for all the types
+addProtocols(maplibregl);
+
+// Use a prefix so the layer selector can find our layers
+const layerIdPrefix = 'example-';
+
+map.on('load', () => {
+
+    // Add few sources and layers to show how each converter works
+    
+    // KML
+    const kmlSourceName = 'cape-may-incorporated-place';
+    const kmlLink = 'kml://./data/cape_may_incorporated_places.kml';
+    map.addSource(kmlSourceName, {
+        'type': 'geojson',
+        'data': kmlLink,
+    });
+    map.addLayer({
+        'id': layerIdPrefix + kmlSourceName,
+        'type': 'fill',
+        'source': kmlSourceName,
+        'minzoom': 0,
+        'maxzoom': 20,
+        'paint': {
+            'fill-opacity': 0.5,
+            'fill-color': 'green',
+            'fill-outline-color': 'gray'
+        }
+    });
+
+    // TOPOJSON
+    const topojsonSourceName = 'us-congress-113';
+    const topojsonLink = 'topojson://https://gist.githubusercontent.com/mbostock/4090846/raw/07e73f3c2d21558489604a0bc434b3a5cf41a867/us-congress-113.json'
+    map.addSource(topojsonSourceName, {
+        'type': 'geojson',
+        'data': topojsonLink,
+    });
+    map.addLayer({
+        'id': layerIdPrefix + topojsonSourceName,
+        'type': 'fill',
+        'source': topojsonSourceName,
+        'minzoom': 0,
+        'maxzoom': 20,
+        'paint': {
+            'fill-opacity': 0.25,
+            'fill-color': 'yellow',
+            'fill-outline-color': 'gray'
+        }
+    });
+
+    // CSV
+    const csvSourceName = 'restaurants';
+    const csvLink = 'csv://./data/cape_may_restaurants.csv';
+    map.addSource(csvSourceName, {
+        'type': 'geojson',
+        'data': csvLink,
+    });
+    map.addLayer({
+        'id': layerIdPrefix + csvSourceName,
+        'type': 'circle',
+        'source': csvSourceName,
+        'minzoom': 0,
+        'maxzoom': 20,
+        'paint': {
+            'circle-color': 'orange',
+            'circle-radius': 5,
+            'circle-stroke-color': 'black'
+        }
+    });
+
+    // GPX
+    const gpxSourceName = 'beach ave';
+    const gpxLink = 'gpx://./data/beach_ave.gpx';
+    map.addSource(gpxSourceName, {
+        'type': 'geojson',
+        'data': gpxLink,
+    });
+    map.addLayer({
+        'id': layerIdPrefix + gpxSourceName,
+        'type': 'line',
+        'source': gpxSourceName,
+        'minzoom': 0,
+        'maxzoom': 20,
+        'paint': {
+            'line-color': 'red',
+            'line-width': 5
+        }
+    });
+});
+
+// After the last frame rendered before the map enters an "idle" state,
+//  add the toggle fields / layer selector
+map.on('idle', () => {
+    // Add the layer selector
+    layerSelector(map, layerIdPrefix);
+});
