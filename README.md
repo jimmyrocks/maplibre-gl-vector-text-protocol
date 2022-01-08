@@ -1,5 +1,5 @@
 # maplibregl-vector-text-protocol
-Supports geospatial texted based vector data using (Maplibregl.js)[https://github.com/maplibre/maplibre-gl-js] in v1.15.0 or later.
+Supports geospatial texted based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
 
 It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pull/30) functionality that was added in version [1.15.0](https://github.com/maplibre/maplibre-gl-js/releases/tag/v1.15.0).
 
