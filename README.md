@@ -1,9 +1,9 @@
 # maplibregl-vector-text-protocol
-Supports geospatial texted based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
+Supports geospatial texted based vector data using (Maplibregl.js)[https://github.com/maplibre/maplibre-gl-js] in v1.15.0 or later.
 
-It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pull/30) functionality that was added in version (1.15.0)[https://github.com/maplibre/maplibre-gl-js/releases/tag/v1.15.0].
+It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pull/30) functionality that was added in version [1.15.0](https://github.com/maplibre/maplibre-gl-js/releases/tag/v1.15.0).
 
-It can be used with MapboxGLJS 1.x.x using the (mapbox-gl-custom-protocol)[https://www.github.com/jimmyrocks/mapbox-gl-custom-protocol] library. I haven't tested it with MapboxGLJS 2+.
+It can be used with MapboxGLJS 1.x.x using the [mapbox-gl-custom-protocol](https://www.github.com/jimmyrocks/mapbox-gl-custom-protocol) library. I haven't tested it with MapboxGLJS 2+.
 
 ## Supported Formats 🗎
 * [`Topojson`](https://en.wikipedia.org/wiki/GeoJSON#TopoJSON) - A more compact JSON based format than [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) that takes advantage of shared **topo**logies.
@@ -14,18 +14,18 @@ It can be used with MapboxGLJS 1.x.x using the (mapbox-gl-custom-protocol)[https
 * [`TSV`](https://en.wikipedia.org/wiki/Tab-separated_values) - **T**ab-**S**eparated **V**alue - Same as CSV, but it forces the delimiter to be a tab character (\t).
 
 ## Objective ✨
-The [`addProtocol`](https://github.com/maplibre/maplibre-gl-js/blob/492bec58c5684609af8fba81ef01e5f5a3ef0711/src/index.js#L177) feature makes it extremely easy to extend the existing functionality of Maplibre sources without creating a new source type using the (addSourceType)[https://github.com/maplibre/maplibre-gl-js/blob/d375def728d23b9d443a4dcaab0fd06df912223e/src/ui/map.ts#L1583] feature. This makes it very easy to support all kinds of new things in Maplibre. 
+The [`addProtocol`](https://github.com/maplibre/maplibre-gl-js/blob/492bec58c5684609af8fba81ef01e5f5a3ef0711/src/index.js#L177) feature makes it extremely easy to extend the existing functionality of Maplibre sources without creating a new source type using the [addSourceType](https://github.com/maplibre/maplibre-gl-js/blob/d375def728d23b9d443a4dcaab0fd06df912223e/src/ui/map.ts#L1583) feature. This makes it very easy to support all kinds of new things in Maplibre. 
 
 ## Inspiration 💡
 I have worked on many projects where users want to add their own data to a map, but their data is rarely in the right format. This library makes it as easy as adding a `csv://` before the file path to bring a csv file in.
 
-There are a lot of (Geospatial File Formats)[https://en.wikipedia.org/wiki/GIS_file_formats#Vector] out there, this library is intended to serve the most common formats (CSV, KML, GPX, Topojson) without creating a huge library. There are other formats I would like to support, but they will be available in different libraries.
+There are a lot of [Geospatial File Formats](https://en.wikipedia.org/wiki/GIS_file_formats#Vector) out there, this library is intended to serve the most common formats (CSV, KML, GPX, Topojson) without creating a huge library. There are other formats I would like to support, but they will be available in different libraries.
 
 ## External Libraries 📚
 This project would not be possible if it weren't for three core libraries that drive it:
-* @tmcw/togeojson - Supported by (placemark.io)[https:placemark.io] - `KML`, `GPX`, `TCX` support
-* csv2geojson - Supported by (Mapbox)[https://mapbox.com] - `CSV`, `TSV` support
-* topojson-client - From (Mike Bostock)[https://github.com/mbostock] - `Topojson` support
+* @tmcw/togeojson - Supported by [placemark.io](https:placemark.io) - `KML`, `GPX`, `TCX` support
+* csv2geojson - Supported by [Mapbox](https://mapbox.com) - `CSV`, `TSV` support
+* topojson-client - From [Mike Bostock](https://github.com/mbostock) - `Topojson` support
 
 I'd also like to thank the Mapbox🚀 and Maplibre teams for creating such a great project that is easily extendable.
 
