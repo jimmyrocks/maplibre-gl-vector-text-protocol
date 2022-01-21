@@ -6,19 +6,29 @@ import {
 
 import { FeatureCollection } from 'geojson';
 import { Converter, supportedFormatsType, supportedFormats } from './converter';
+import { Actor } from './worker/actor';
+
 
 // https://github.com/maplibre/maplibre-gl-js/blob/ddf69421c6ae34c808afefec309a5beecdb7500e/src/index.ts#L151
-
 export const VectorTextProtocol = (requestParameters: RequestParameters, callback: ResponseCallback<FeatureCollection>) => {
-    const prefix = requestParameters.url.split('://')[0];
+    const prefix = requestParameters.url.split('://')[0] as supportedFormatsType;
     const url = requestParameters.url.replace(new RegExp(`^${prefix}://`), '');
 
     fetch(url)
         .then(response => {
             if (response.status == 200) {
                 response.text().then(rawData => {
-                    let converter = new Converter(prefix as supportedFormatsType, rawData);
-                    converter.convert().then(data => {
+                    let converter;
+                    let fn;
+                    if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0) {
+                        // XML requires the DOM, which isn't available to web workers
+                        converter = new Converter(prefix, rawData);
+                        fn = converter.convert()
+                    } else {
+                        converter = new Actor('Converter', [prefix, rawData]);
+                        fn = converter.exec('convert');
+                    }
+                    fn.then(data => {
                         callback(null, data as FeatureCollection, null, null);
                     }).catch((e: Error) => {
                         callback(e);

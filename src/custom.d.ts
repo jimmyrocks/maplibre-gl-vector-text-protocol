@@ -18,3 +18,8 @@ declare module 'csv2geojson' {
         callback: (err:string, data: FeatureCollection) => void
     ):void
 }
+
+declare module 'web-worker:*' {
+    const WorkerFactory: new () => Worker;
+    export default WorkerFactory;
+}
