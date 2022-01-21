@@ -2,9 +2,10 @@
 
 import merge from 'deepmerge';
 import { terser } from "rollup-plugin-terser";
-import typescript from '@rollup/plugin-typescript';
+import { default as typescript } from 'rollup-plugin-typescript2';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import webWorkerLoader from 'rollup-plugin-web-worker-loader';
 
 import fs from 'fs';
 
@@ -17,7 +18,9 @@ const baseConfig = {
     name: 'VectorTextProtocol'
   },
   treeshake: env === 'production',
-  plugins: [typescript(), nodeResolve(), commonjs()]
+  plugins: [webWorkerLoader({
+    'extensions': ['.ts']
+  }), typescript(), nodeResolve(), commonjs()]
 };
 
 const configs = [{
