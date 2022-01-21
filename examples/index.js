@@ -20,7 +20,7 @@ map.on('load', () => {
     // Add few sources and layers to show how each converter works
     
     // KML
-    const kmlSourceName = 'cape-may-incorporated-place';
+    const kmlSourceName = 'cape-may-incorporated-place (kml)';
     const kmlLink = 'kml://./data/cape_may_incorporated_places.kml';
     map.addSource(kmlSourceName, {
         'type': 'geojson',
@@ -40,7 +40,7 @@ map.on('load', () => {
     });
 
     // TOPOJSON
-    const topojsonSourceName = 'us-congress-113';
+    const topojsonSourceName = 'us-congress-113 (topojson)';
     const topojsonLink = 'topojson://https://gist.githubusercontent.com/mbostock/4090846/raw/07e73f3c2d21558489604a0bc434b3a5cf41a867/us-congress-113.json'
     map.addSource(topojsonSourceName, {
         'type': 'geojson',
@@ -60,7 +60,7 @@ map.on('load', () => {
     });
 
     // CSV
-    const csvSourceName = 'restaurants';
+    const csvSourceName = 'restaurants (csv)';
     const csvLink = 'csv://./data/cape_may_restaurants.csv';
     map.addSource(csvSourceName, {
         'type': 'geojson',
@@ -80,7 +80,7 @@ map.on('load', () => {
     });
 
     // GPX
-    const gpxSourceName = 'beach ave';
+    const gpxSourceName = 'beach ave (gpx)';
     const gpxLink = 'gpx://./data/beach_ave.gpx';
     map.addSource(gpxSourceName, {
         'type': 'geojson',
