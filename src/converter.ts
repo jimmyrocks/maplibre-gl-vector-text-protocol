@@ -86,7 +86,7 @@ export class Converter {
             throw "Invalid TopoJson";
         }
 
-        // Convert the data (TODO: web worker?)
+        // Convert the data
         let result: FeatureCollection = this.blankGeoJSON();
         if (topoJsonData.type === "Topology" && topoJsonData.objects !== undefined) {
             result = {

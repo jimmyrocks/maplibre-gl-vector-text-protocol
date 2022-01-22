@@ -32,7 +32,14 @@ self.addEventListener('message', e => {
     'init': (msg: MessageData) => {
       const { id, command, message } = msg;
       subClass = new libraries[command](message[0], message[1]);
-      post(id, undefined, undefined, 'init_response')
+
+      // return the class' methods
+      const fns = [
+        ...Object.getOwnPropertyNames(libraries[command].prototype),
+        ...Object.keys(subClass)
+      ].map(key => [key, typeof libraries[command].prototype[key]])
+        .reduce((a, c) => ({ ...a, ...{ [c[0]]: c[1] } }), {});
+      post(id, undefined, fns, 'init_response')
     },
     'get': function (msg: MessageData) {
       const { id, command } = msg;
@@ -60,7 +67,6 @@ self.addEventListener('message', e => {
         }
       } else {
         // Error
-        console.log(id, command, message, process);
         post(id, new Error(`command "${command}" not found`));
       }
     }

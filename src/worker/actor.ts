@@ -12,30 +12,42 @@ export class Actor {
         'res': (value: any) => void,
         'rej': (value: Error) => void
     }>;
-    ready: boolean;
     initId: string;
+    _: {} | undefined;
 
     constructor(subClass: SubClasses, args: Array<any>) {
         this.initId = rnd() + '-' + subClass;
 
         this.worker = new WebWorker();
         this.handlers = new Map();
-        this.ready = false;
 
         // Listen for any messages back from the worker
         this.worker.onmessage = (event: any) => {
             const data = event.data as MessageData;
             const handler = this.handlers.get(data.id);
+            const that = this;
+
             if (handler) {
                 if (data.type === 'response') {
                     handler.res(data.message);
                 }
                 if (data.type === 'error') {
-                    const error = data.error || new Error(`Unknown error with $this.subClass`);
+                    const error = data.error || new Error(`Unknown error with ${this.subClass}`);
                     handler.rej(error);
                 }
                 if (data.type === 'init_response') {
-                    handler.res(this);
+                    this._ = Object.keys(data.message)
+                        .map(key => {
+                            const isFn = typeof data.message[key as any];
+                            const subFunction = function () {
+                                return isFn ?
+                                    (that.exec(key) as any)(...arguments) :
+                                    that.get(key);
+                            };
+                            return [key, subFunction];
+                        })
+                        .reduce((a, c) => ({ ...a, ...{ [c[0] as string]: c[1] } }), {});
+                    handler.res(this._);
                 }
             }
         };
@@ -51,11 +63,9 @@ export class Actor {
 
     onLoad() {
         return new Promise((res) => {
-            if (this.ready) {
-                res(this);
-            } else {
-                this.handlers.set(this.initId, { 'res': res, 'rej': res });
-            }
+            (this._ === undefined) ?
+                this.handlers.set(this.initId, { 'res': res, 'rej': res }) :
+                res(this._);
         })
     }
 
