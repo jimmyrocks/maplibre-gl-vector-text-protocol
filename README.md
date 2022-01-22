@@ -1,9 +1,11 @@
 # maplibre-gl-vector-text-protocol
-Supports geospatial texted based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
+Supports geospatial text based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
 
 It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pull/30) functionality that was added in version [1.15.0](https://github.com/maplibre/maplibre-gl-js/releases/tag/v1.15.0).
 
 It can be used with MapboxGLJS 1.x.x using the [mapbox-gl-custom-protocol](https://www.github.com/jimmyrocks/mapbox-gl-custom-protocol) library. I haven't tested it with MapboxGLJS 2+.
+
+Web workers are used to convert `CSV`, `TSV`, and `Topojson` formats. `KML`, `GPX`, and `TCX` formats are based on XML and use the [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser), which isn't available to web workers, so they are converted to GeoJSON in the main thread.
 
 ## Supported Formats 🗎
 * [`Topojson`](https://en.wikipedia.org/wiki/GeoJSON#TopoJSON) - A more compact JSON based format than [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) that takes advantage of shared **topo**logies.
