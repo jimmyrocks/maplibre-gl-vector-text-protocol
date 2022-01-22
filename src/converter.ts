@@ -1,8 +1,8 @@
 import { FeatureCollection } from 'geojson';
 import { Topology } from 'topojson-specification'
-import * as csv2geojson /*{, csvOptions }*/ from 'csv2geojson';
+import * as csv2geojson from 'csv2geojson';
 import { feature as topojsonFeature } from 'topojson-client';
-import * as toGeoJson  from '@tmcw/togeojson';
+import * as toGeoJson from '@tmcw/togeojson';
 
 export const supportedFormats = ['topojson', 'kml', 'gpx', 'tcx', 'csv', 'tsv'] as const;
 export type supportedFormatsType = typeof supportedFormats[number];
@@ -12,7 +12,7 @@ export class Converter {
         'type': 'FeatureCollection',
         'features': []
     });
- 
+
     _conversionFn: () => Promise<FeatureCollection>;
     _rawData: string;
     _format: supportedFormatsType;
@@ -41,31 +41,25 @@ export class Converter {
         }
     }
 
-    loadXml = async (): Promise<FeatureCollection> => {
-
-        /*const formats:{[key: string]: (doc: Document) => FeatureCollection} = {
-            'kml': kml,
-            'gpx': gpx,
-            //'tcx': tcx
-        };*/
+    async loadXml(): Promise<FeatureCollection> {
 
         const geojson = (toGeoJson as any)[this._format](
             new DOMParser().parseFromString(this._rawData, "text/xml")
         );
-    
-        return geojson;
-    };
 
-    loadCsv = async (): Promise<FeatureCollection> => {
-    
+        return geojson;
+    }
+
+    async loadCsv(): Promise<FeatureCollection> {
+
         type csvOptions = any; //TODO
         let geojson = this.blankGeoJSON();
         let options: csvOptions = {};
-    
+
         if (this._format === 'tsv') {
             options.delimiter = '\t';
         }
-    
+
         geojson = await new Promise((res, rej) => {
             csv2geojson.csv2geojson(
                 this._rawData,
@@ -73,11 +67,11 @@ export class Converter {
                 (err: string, data: FeatureCollection) => err ? rej(err) : res(data)
             )
         });
-    
-        return geojson;
-    };
 
-    loadTopoJson = async (): Promise<FeatureCollection> => {
+        return geojson;
+    }
+
+    async loadTopoJson(): Promise<FeatureCollection> {
 
         type topojson = {
             type?: 'Topology';
@@ -85,13 +79,13 @@ export class Converter {
             arcs?: any;
         };
         let topoJsonData: topojson = {};
-    
+
         try {
             topoJsonData = JSON.parse(this._rawData);
         } catch (e) {
             throw "Invalid TopoJson";
         }
-    
+
         // Convert the data (TODO: web worker?)
         let result: FeatureCollection = this.blankGeoJSON();
         if (topoJsonData.type === "Topology" && topoJsonData.objects !== undefined) {
@@ -99,7 +93,7 @@ export class Converter {
                 type: "FeatureCollection",
                 features: result.features = Object.keys(topoJsonData.objects).map(key =>
                     topojsonFeature(topoJsonData as any, key)
-                ).reduce((a: any[], v) => [...a, ...(v as any).features],[])
+                ).reduce((a: any[], v) => [...a, ...(v as any).features], [])
             };
         }
         return result;
