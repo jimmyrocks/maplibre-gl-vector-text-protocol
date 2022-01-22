@@ -18,15 +18,15 @@ export const VectorTextProtocol = (requestParameters: RequestParameters, callbac
         .then(response => {
             if (response.status == 200) {
                 response.text().then(rawData => {
-                    let converter;
+                    let converter: Actor | Converter;
                     let fn;
                     if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0) {
-                        // XML requires the DOM, which isn't available to web workers
+                        // XML used the DOM, which isn't available to web workers
                         converter = new Converter(prefix, rawData);
                         fn = converter.convert()
                     } else {
                         converter = new Actor('Converter', [prefix, rawData]);
-                        fn = converter.exec('convert');
+                        fn = converter.exec('convert')();
                     }
                     fn.then(data => {
                         callback(null, data as FeatureCollection, null, null);
