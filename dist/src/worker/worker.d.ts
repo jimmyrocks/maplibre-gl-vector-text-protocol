@@ -1,5 +1,5 @@
 export interface MessageData {
-    'type': 'response' | 'error' | 'init' | 'exec';
+    'type': 'response' | 'error' | 'init' | 'exec' | 'get' | 'init_response';
     'id': string;
     'message': Array<any>;
     'error'?: Error;

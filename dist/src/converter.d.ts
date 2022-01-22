@@ -8,7 +8,7 @@ export declare class Converter {
     _format: supportedFormatsType;
     constructor(format: supportedFormatsType, data: string);
     convert(): Promise<unknown>;
-    loadXml: () => Promise<FeatureCollection>;
-    loadCsv: () => Promise<FeatureCollection>;
-    loadTopoJson: () => Promise<FeatureCollection>;
+    loadXml(): Promise<FeatureCollection>;
+    loadCsv(): Promise<FeatureCollection>;
+    loadTopoJson(): Promise<FeatureCollection>;
 }
