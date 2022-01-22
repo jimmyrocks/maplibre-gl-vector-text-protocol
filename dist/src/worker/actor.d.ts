@@ -6,8 +6,8 @@ export declare class Actor {
         'res': (value: any) => void;
         'rej': (value: Error) => void;
     }>;
-    ready: boolean;
     initId: string;
+    _: {} | undefined;
     constructor(subClass: SubClasses, args: Array<any>);
     onLoad(): Promise<unknown>;
     exec(command: string): () => Promise<any>;
