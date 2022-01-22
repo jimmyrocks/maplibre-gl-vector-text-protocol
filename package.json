@@ -1,5 +1,5 @@
 {
-    "name": "maplibregl-vector-text-protocol",
+    "name": "maplibre-gl-vector-text-protocol",
     "version": "0.0.1",
     "description": "Allows various text based vector formats to be used with maplibre",
     "keywords": [
@@ -14,9 +14,9 @@
     ],
     "author": "James McAndrew  <jim@loc8.us>",
     "license": "MIT",
-    "main": "dist/maplibregl-vector-text-protocol.js",
-    "module": "dist/maplibregl-vector-text-protocol.esm.js",
-    "browser": "dist/maplibregl-vector-text-protocol.min.js",
+    "main": "dist/maplibre-gl-vector-text-protocol.js",
+    "module": "dist/maplibre-gl-vector-text-protocol.esm.js",
+    "browser": "dist/maplibre-gl-vector-text-protocol.min.js",
     "files": [
         "dist"
     ],

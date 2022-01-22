@@ -1,4 +1,4 @@
-# maplibregl-vector-text-protocol
+# maplibre-gl-vector-text-protocol
 Supports geospatial texted based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
 
 It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pull/30) functionality that was added in version [1.15.0](https://github.com/maplibre/maplibre-gl-js/releases/tag/v1.15.0).
@@ -32,7 +32,7 @@ I'd also like to thank the Mapbox🚀 and Maplibre teams for creating such a gre
 ## Usage 🛠️
 
 ```javascript
-<script src="https://loc8.us/maplibregl-vector-text-protocol/dist/maplibregl-vector-text-protocol.js"></script>
+<script src="https://loc8.us/maplibre-gl-vector-text-protocol/dist/maplibre-gl-vector-text-protocol.js"></script>
 
 // Add all types
 VectorTextProtocol.addProtocols(maplibregl);
@@ -43,5 +43,5 @@ maplibregl.addProtocol('kml', VectorTextProtocol);
 ```
 
 ## Examples ⚙️
-* [KML, CSV, TOPOJSON, GPX (using Modules)](https://loc8.us/maplibregl-vector-text-protocol/examples/index.html)
-* [TOPOJSON (using UMD)](https://loc8.us/maplibregl-vector-text-protocol/examples/umd.html)
+* [KML, CSV, TOPOJSON, GPX (using Modules)](https://loc8.us/maplibre-gl-vector-text-protocol/examples/index.html)
+* [TOPOJSON (using UMD)](https://loc8.us/maplibre-gl-vector-text-protocol/examples/umd.html)
