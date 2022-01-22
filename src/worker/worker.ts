@@ -1,7 +1,7 @@
 import { Converter } from '../converter';
 
 export interface MessageData {
-  'type': 'response' | 'error' | 'init' | 'exec',
+  'type': 'response' | 'error' | 'init' | 'exec' | 'get' | 'init_response',
   'id': string,
   'message': Array<any>,
   'error'?: Error,
@@ -14,48 +14,59 @@ const libraries: { [_: string]: any } = {
   'Converter': Converter
 };
 
-let process: any;
+let subClass: any;
 
 self.addEventListener('message', e => {
   const data = (e.data || e) as MessageData;
 
-  // {type: 'init', args: 'This instance was created in a worker'}
+  const post = (id: string, err: Error | undefined, res?: any, type?: string) => {
+    postMessage({
+      type: type ? type : (err ? 'error' : 'response'),
+      id: id,
+      message: res,
+      error: err
+    } as MessageData)
+  }
+
   const commands = {
     'init': (msg: MessageData) => {
-      process = new libraries[msg.command](msg.message[0], msg.message[1]);
+      const { id, command, message } = msg;
+      subClass = new libraries[command](message[0], message[1]);
+      post(id, undefined, undefined, 'init_response')
+    },
+    'get': function (msg: MessageData) {
+      const { id, command } = msg;
+      if (subClass && subClass[command]) {
+        post(id, undefined, subClass[command]);
+      } else {
+        post(id, undefined, undefined);
+      }
     },
     'exec': function (msg: MessageData) {
       const { id, command, message } = msg;
 
-      if (process && process[command]) {
-        (process[command] as () => Promise<any>)
-          .apply(process, message as [])
-          // SUCCESS
-          .then(res => postMessage({
-            type: 'response',
-            id: id,
-            message: res
-          } as MessageData))
-          // Error
-          .catch(e => postMessage({
-            type: 'error',
-            id: id,
-            error: e as Error
-          } as MessageData));
+      if (subClass && subClass[command] && typeof subClass[command] === 'function') {
+        const cmd = (subClass[command] as () => Promise<any>)
+          .apply(subClass, message as []);
+
+        if (!!cmd && typeof cmd.then === 'function') {
+          // It's a promise, so wait for it
+          cmd
+            .then(res => post(id, undefined, res))
+            .catch(e => post(id, e));
+        } else {
+          // Not a promise, just return it
+          post(id, undefined, cmd);
+        }
       } else {
         // Error
         console.log(id, command, message, process);
-        postMessage({
-          type: 'error',
-          id: id,
-          error: new Error(`command "${command}" not found`)
-        });
+        post(id, new Error(`command "${command}" not found`));
       }
     }
   };
 
-  if (commands[data.type as 'init' | 'exec']) {
-    commands[data.type as 'init' | 'exec'](data)
+  if (commands[data.type as 'init' | 'exec' | 'get']) {
+    commands[data.type as 'init' | 'exec' | 'get'](data)
   }
-
 });

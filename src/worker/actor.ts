@@ -1,4 +1,5 @@
 import WebWorker from 'web-worker:./worker';
+import { addProtocols } from '..';
 
 const rnd = () => Math.random().toString(36).substring(2);
 
@@ -11,19 +12,15 @@ export class Actor {
         'res': (value: any) => void,
         'rej': (value: Error) => void
     }>;
+    ready: boolean;
+    initId: string;
 
     constructor(subClass: SubClasses, args: Array<any>) {
-        const id = rnd();
+        this.initId = rnd() + '-' + subClass;
+
         this.worker = new WebWorker();
         this.handlers = new Map();
-
-        // Tell the worker to create the class
-        this.worker.postMessage({
-            type: 'init',
-            id: id,
-            command: subClass,
-            message: args
-        } as MessageData);
+        this.ready = false;
 
         // Listen for any messages back from the worker
         this.worker.onmessage = (event: any) => {
@@ -37,21 +34,60 @@ export class Actor {
                     const error = data.error || new Error(`Unknown error with $this.subClass`);
                     handler.rej(error);
                 }
+                if (data.type === 'init_response') {
+                    handler.res(this);
+                }
             }
+        };
+
+        // Tell the worker to create the class
+        this.worker.postMessage({
+            type: 'init',
+            id: this.initId,
+            command: subClass,
+            message: args
+        } as MessageData);
+    }
+
+    onLoad() {
+        return new Promise((res) => {
+            if (this.ready) {
+                res(this);
+            } else {
+                this.handlers.set(this.initId, { 'res': res, 'rej': res });
+            }
+        })
+    }
+
+    exec(command: string) {
+        const that = this;
+        return function (): Promise<any> {
+            return new Promise((res, rej) => {
+                const id = rnd() + '-' + command;
+                that.handlers.set(id, { 'res': res, 'rej': rej });
+
+                // Tell the worker to run the command
+                that.worker.postMessage({
+                    type: 'exec',
+                    id: id,
+                    command: command,
+                    message: [...arguments]
+                } as MessageData);
+            })
         };
     }
 
-    exec(command: string, args: Array<any> = []): Promise<any> {
+    get(command: string): Promise<any> {
         return new Promise((res, rej) => {
             const id = rnd() + '-' + command;
-            this.handlers.set(id, {'res': res, 'rej': rej });
+            this.handlers.set(id, { 'res': res, 'rej': rej });
 
             // Tell the worker to run the command
             this.worker.postMessage({
-                type: 'exec',
+                type: 'get',
                 id: id,
                 command: command,
-                message: args
+                message: []
             } as MessageData);
         })
     }
