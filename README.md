@@ -1,14 +1,16 @@
 # maplibre-gl-vector-text-protocol
-Supports geospatial texted based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
+Supports geospatial text based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
 
 It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pull/30) functionality that was added in version [1.15.0](https://github.com/maplibre/maplibre-gl-js/releases/tag/v1.15.0).
 
 It can be used with MapboxGLJS 1.x.x using the [mapbox-gl-custom-protocol](https://www.github.com/jimmyrocks/mapbox-gl-custom-protocol) library. I haven't tested it with MapboxGLJS 2+.
 
+Web workers are used to convert `CSV`, `TSV`, and `Topojson` formats. `KML`, `GPX`, and `TCX` formats are based on XML and use the [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser), which isn't available to web workers, so they are converted to GeoJSON in the main thread.
+
 ## Supported Formats 🗎
 * [`Topojson`](https://en.wikipedia.org/wiki/GeoJSON#TopoJSON) - A more compact JSON based format than [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) that takes advantage of shared **topo**logies.
 * [`KML`](https://en.wikipedia.org/wiki/Keyhole_Markup_Language) - **K**eyhole **M**arkup **L**anguage, popularized by [Google Earth](https://en.wikipedia.org/wiki/Google_Earth).
-* [`GPX`](https://en.wikipedia.org/wiki/GPS_Exchange_Format) - **G****P**S E**x**change Format - A common XML-based format used by may GPS devices.
+* [`GPX`](https://en.wikipedia.org/wiki/GPS_Exchange_Format) - **GP**S E**x**change Format - A common XML-based format used by may GPS devices.
 * [`TCX`](https://en.wikipedia.org/wiki/Training_Center_XML) - **T**raining **C**enter **X**ML - An XML-based format used by various Garmin devices and applications (e.g. [Garmin Connect](https://connect.garmin.com)).
 * [`CSV`](https://en.wikipedia.org/wiki/Comma-separated_values) - **C**omma-**S**eparated **V**alues, the old reliable of data formats. No options are exposed, Latitude fields must start with "lat" and Longitude fields must start with "lon" or "lng". Will also work with bar (|) and tab (\t) separated values.
 * [`TSV`](https://en.wikipedia.org/wiki/Tab-separated_values) - **T**ab-**S**eparated **V**alue - Same as CSV, but it forces the delimiter to be a tab character (\t).
