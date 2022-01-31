@@ -46,4 +46,6 @@ maplibregl.addProtocol('kml', VectorTextProtocol);
 
 ## Examples ⚙️
 * [KML, CSV, TOPOJSON, GPX (using Modules)](https://loc8.us/maplibre-gl-vector-text-protocol/examples/index.html)
-* [TOPOJSON (using UMD)](https://loc8.us/maplibre-gl-vector-text-protocol/examples/umd.html)
+* [TOPOJSON (using UMD)](https://loc8.us/maplibre-gl-vector-text-protocol/examples/umd.html) 
+### Codepen
+* [TOPOJSON](https://codepen.io/jimmyrocks/pen/ExbPXZP)
