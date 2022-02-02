@@ -1664,40 +1664,53 @@
 	    }
 	}
 
+	// Safari changes https:// to http// for some reason, so this is broken in Safari and iPhone
+	// So to fix this we add it back
+	const needsUrlCheck = (new URL('test://http://example.com')).href !== 'test://http://example.com';
+	const checkUrl = (url) => {
+	    const safariFixRegex = new RegExp('^(https?)(\/\/)');
+	    const cleanUrl = url.replace(safariFixRegex, '$1:$2');
+	    return cleanUrl;
+	};
 	// https://github.com/maplibre/maplibre-gl-js/blob/ddf69421c6ae34c808afefec309a5beecdb7500e/src/index.ts#L151
 	const VectorTextProtocol = (requestParameters, callback) => {
+	    const controller = new AbortController();
 	    const prefix = requestParameters.url.split('://')[0];
 	    const url = requestParameters.url.replace(new RegExp(`^${prefix}://`), '');
-	    fetch(url)
-	        .then(response => {
-	        if (response.status == 200) {
-	            response.text().then(rawData => {
-	                let converter;
-	                let fn;
-	                if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0) {
-	                    // XML used the DOM, which isn't available to web workers
-	                    converter = new Converter(prefix, rawData);
-	                    fn = converter.convert();
-	                }
-	                else {
-	                    converter = new Actor('Converter', [prefix, rawData]);
-	                    fn = converter.exec('convert')();
-	                }
-	                fn.then(data => {
-	                    callback(null, data, null, null);
-	                }).catch((e) => {
-	                    callback(e);
+	    // Apply the Safari fix
+	    const cleanUrl = needsUrlCheck ? checkUrl(url) : url;
+	    if (cleanUrl) {
+	        fetch(cleanUrl, { signal: controller.signal })
+	            .then(response => {
+	            if (response.status == 200) {
+	                response.text().then(rawData => {
+	                    let converter;
+	                    let fn;
+	                    if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0) {
+	                        // XML used the DOM, which isn't available to web workers
+	                        converter = new Converter(prefix, rawData);
+	                        fn = converter.convert();
+	                    }
+	                    else {
+	                        converter = new Actor('Converter', [prefix, rawData]);
+	                        fn = converter.exec('convert')();
+	                    }
+	                    fn.then(data => {
+	                        callback(null, data, null, null);
+	                    }).catch((e) => {
+	                        callback(e);
+	                    });
 	                });
-	            });
-	        }
-	        else {
-	            callback(new Error(`Data fetch error: ${response.statusText}`));
-	        }
-	    })
-	        .catch(e => {
-	        callback(new Error(e));
-	    });
-	    return { cancel: () => { } };
+	            }
+	            else {
+	                callback(new Error(`Data fetch error: ${response.statusText}`));
+	            }
+	        })
+	            .catch(e => {
+	            callback(new Error(e));
+	        });
+	    }
+	    return { cancel: () => { controller.abort(); } };
 	};
 	const addProtocols = (mapLibrary) => {
 	    supportedFormats.forEach(type => {
