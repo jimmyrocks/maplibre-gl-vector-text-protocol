@@ -8,6 +8,17 @@ import { FeatureCollection } from 'geojson';
 import { Converter, supportedFormatsType, supportedFormats } from './converter';
 import { Actor } from './worker/actor';
 
+// Make sure we can support workers in the current browser / runtime
+const supportsWorkers = () => {
+    let supported = false;
+    try {
+        supported = typeof (window.Worker) === 'function';
+    } catch (e) {
+        supported = false;
+    }
+    return supported;
+};
+
 // Safari changes https:// to http// for some reason, so this is broken in Safari and iPhone
 // So to fix this we add it back
 const needsUrlCheck = (new URL('test://http://example.com')).href !== 'test://http://example.com';
@@ -33,7 +44,7 @@ export const VectorTextProtocol = (requestParameters: RequestParameters, callbac
                     response.text().then(rawData => {
                         let converter: Actor | Converter;
                         let fn;
-                        if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0) {
+                        if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0 || ! supportsWorkers()) {
                             // XML used the DOM, which isn't available to web workers
                             converter = new Converter(prefix, rawData);
                             fn = converter.convert()
