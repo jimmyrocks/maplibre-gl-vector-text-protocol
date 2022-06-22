@@ -41,7 +41,7 @@ map.on('load', () => {
 
     // TOPOJSON
     const topojsonSourceName = 'us-congress-113 (topojson)';
-    const topojsonLink = 'topojson://gist.githubusercontent.com/mbostock/4090846/raw/07e73f3c2d21558489604a0bc434b3a5cf41a867/us-congress-113.json'
+    const topojsonLink = 'topojson://https://gist.githubusercontent.com/mbostock/4090846/raw/07e73f3c2d21558489604a0bc434b3a5cf41a867/us-congress-113.json'
     map.addSource(topojsonSourceName, {
         'type': 'geojson',
         'data': topojsonLink,
