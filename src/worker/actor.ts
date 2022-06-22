@@ -1,5 +1,4 @@
 import WebWorker from 'web-worker:./worker';
-import { addProtocols } from '..';
 
 const rnd = () => Math.random().toString(36).substring(2);
 
