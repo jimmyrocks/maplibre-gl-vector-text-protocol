@@ -8,7 +8,7 @@ export interface MessageData {
   'command': string
 }
 
-const subClasses = ['Converter'] as const
+const subClasses = ['Converter'] as const;
 export type SubClasses = typeof subClasses[number];
 const libraries: { [_: string]: any } = {
   'Converter': Converter

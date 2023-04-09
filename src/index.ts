@@ -28,7 +28,14 @@ const checkUrl = (url: string): string | undefined => {
     return cleanUrl;
 }
 
-// https://github.com/maplibre/maplibre-gl-js/blob/ddf69421c6ae34c808afefec309a5beecdb7500e/src/index.ts#L151
+/**
+ * The VectorTextProtocol function handles requests for vector data and returns a Promise with the
+ * response callback function.
+ * Modeled after this: https://github.com/maplibre/maplibre-gl-js/blob/ddf69421c6ae34c808afefec309a5beecdb7500e/src/index.ts#L151
+ * @param requestParameters - The request parameters containing the URL of the resource.
+ * @param callback - The function to be called when the response is available.
+ * @returns An object with the cancel function.
+ */
 export const VectorTextProtocol = (requestParameters: RequestParameters, callback: ResponseCallback<FeatureCollection>) => {
     const controller = new AbortController();
     const prefix = requestParameters.url.split('://')[0] as supportedFormatsType;
@@ -44,10 +51,10 @@ export const VectorTextProtocol = (requestParameters: RequestParameters, callbac
                     response.text().then(rawData => {
                         let converter: Actor | Converter;
                         let fn;
-                        if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0 || ! supportsWorkers()) {
-                            // XML used the DOM, which isn't available to web workers
+                        if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0 || !supportsWorkers()) {
+                            // XML uses the DOM, which isn't available to web workers
                             converter = new Converter(prefix, rawData);
-                            fn = converter.convert()
+                            fn = converter.convert();
                         } else {
                             converter = new Actor('Converter', [prefix, rawData]);
                             fn = converter.exec('convert')();
@@ -66,9 +73,15 @@ export const VectorTextProtocol = (requestParameters: RequestParameters, callbac
                 callback(new Error(e));
             });
     }
+
+    // Allow the request to be cancelled
     return { cancel: () => { controller.abort() } };
 };
 
+/**
+ * Add the vector text protocol to a map library for each supported format.
+ * @param mapLibrary - The MapLibrary object to add the protocols to.
+ */
 export const addProtocols = (mapLibrary: typeof MapLibrary) => {
     supportedFormats.forEach(type => {
         mapLibrary.addProtocol(type, VectorTextProtocol);
