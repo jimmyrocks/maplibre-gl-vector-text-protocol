@@ -6,5 +6,5 @@ export interface MessageData {
     'command': string;
 }
 declare const subClasses: readonly ["Converter"];
-export declare type SubClasses = typeof subClasses[number];
+export type SubClasses = typeof subClasses[number];
 export {};
