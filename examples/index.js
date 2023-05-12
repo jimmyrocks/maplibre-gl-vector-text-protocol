@@ -59,6 +59,45 @@ map.on('load', () => {
         }
     });
 
+    // OSM polygon (json)
+    const osmSourceName = 'marsh (osm polygon json)';
+    const osmLink = 'osm://https://www.openstreetmap.org/api/0.6/relation/5544086/full.json'
+    map.addSource(osmSourceName, {
+        'type': 'geojson',
+        'data': osmLink,
+    });
+    map.addLayer({
+        'id': layerIdPrefix + osmSourceName,
+        'type': 'fill',
+        'source': osmSourceName,
+        'minzoom': 0,
+        'maxzoom': 20,
+        'paint': {
+            'fill-opacity': 0.25,
+            'fill-color': 'blue',
+            'fill-outline-color': 'gray'
+        }
+    });
+
+    // OSM line (xml)
+    const osmLineSourceName = 'madison ave (osm line xml)';
+    const osmLineLink = 'osm://https://www.openstreetmap.org/api/0.6/relation/968291/full'
+    map.addSource(osmLineSourceName, {
+        'type': 'geojson',
+        'data': osmLineLink,
+    });
+    map.addLayer({
+        'id': layerIdPrefix + osmLineSourceName,
+        'type': 'line',
+        'source': osmLineSourceName,
+        'minzoom': 0,
+        'maxzoom': 20,
+        'paint': {
+            'line-opacity': 0.4,
+            'line-color': 'blue',
+        }
+    });
+
     // CSV
     const csvSourceName = 'restaurants (csv)';
     const csvLink = 'csv://./data/cape_may_restaurants.csv';
