@@ -1,5 +1,5 @@
 import { FeatureCollection } from 'geojson';
-export declare const supportedFormats: readonly ["topojson", "kml", "gpx", "tcx", "csv", "tsv"];
+export declare const supportedFormats: readonly ["topojson", "osm", "kml", "gpx", "tcx", "csv", "tsv"];
 export type supportedFormatsType = typeof supportedFormats[number];
 export declare class Converter {
     _conversionFn: () => Promise<FeatureCollection>;
@@ -26,4 +26,8 @@ export declare class Converter {
      * Loads TopoJSON data and converts it into a GeoJSON FeatureCollection
      */
     loadTopoJson(): Promise<FeatureCollection>;
+    /**
+     * Loads OSM data and converts it into a GeoJSON FeatureCollection
+     */
+    loadOsm(): Promise<FeatureCollection>;
 }
