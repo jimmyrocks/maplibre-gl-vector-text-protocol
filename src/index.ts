@@ -29,6 +29,34 @@ const checkUrl = (url: string): string | undefined => {
 }
 
 /**
+ * The processData function accepts a URL, prefix, and an optional controller
+ * and tries to read and convert the data
+ * @param url - The URL of the resource.
+ * @param prefix - The prefix used to process the data
+ * @param controller - optional controller that can be used to cancel a request
+ * @returns A geojson FeatureCollection (or undefined)
+ */
+async function processData(url: string, prefix: supportedFormatsType, controller?: AbortController): Promise<FeatureCollection | undefined> {
+    const response = await fetch(url, controller ? { signal: controller.signal } : undefined)
+
+    if (response.status == 200) {
+        const rawData = await response.text();
+        let convertPromise;
+        if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0 || !supportsWorkers()) {
+            // XML uses the DOM, which isn't available to web workers
+            const converter = new Converter(prefix, rawData);
+            convertPromise = converter.convert();
+        } else {
+            const converter = new Actor('Converter', [prefix, rawData]);
+            convertPromise = converter.exec('convert')();
+        }
+        return await convertPromise;
+    } else {
+        throw (new Error(`Data fetch error: ${response.statusText}`));
+    }
+};
+
+/**
  * The VectorTextProtocol function handles requests for vector data and returns a Promise with the
  * response callback function.
  * Modeled after this: https://github.com/maplibre/maplibre-gl-js/blob/ddf69421c6ae34c808afefec309a5beecdb7500e/src/index.ts#L151
@@ -45,33 +73,9 @@ export const VectorTextProtocol = (requestParameters: RequestParameters, callbac
     const cleanUrl = needsUrlCheck ? checkUrl(url) : url;
 
     if (cleanUrl) {
-        fetch(cleanUrl, { signal: controller.signal })
-            .then(response => {
-                if (response.status == 200) {
-                    response.text().then(rawData => {
-                        let converter: Actor | Converter;
-                        let fn;
-                        if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0 || !supportsWorkers()) {
-                            // XML uses the DOM, which isn't available to web workers
-                            converter = new Converter(prefix, rawData);
-                            fn = converter.convert();
-                        } else {
-                            converter = new Actor('Converter', [prefix, rawData]);
-                            fn = converter.exec('convert')();
-                        }
-                        fn.then(data => {
-                            callback(null, data as FeatureCollection, null, null);
-                        }).catch((e: Error) => {
-                            callback(e);
-                        });
-                    });
-                } else {
-                    callback(new Error(`Data fetch error: ${response.statusText}`));
-                }
-            })
-            .catch(e => {
-                callback(new Error(e));
-            });
+        processData(cleanUrl, prefix, controller)
+            .then(data => callback(null, data))
+            .catch(e => callback(e))
     }
 
     // Allow the request to be cancelled

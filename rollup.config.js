@@ -5,6 +5,7 @@ import terser from "@rollup/plugin-terser";
 import typescript from 'rollup-plugin-typescript2';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import webWorkerLoader from 'rollup-plugin-web-worker-loader';
 
 import { readFileSync } from 'fs';
@@ -20,7 +21,7 @@ const baseConfig = {
   treeshake: env === 'production',
   plugins: [webWorkerLoader({
     'extensions': ['.ts']
-  }), typescript(), nodeResolve(), commonjs()]
+  }), typescript(), nodeResolve(), commonjs(), json()]
 };
 
 const configs = [{

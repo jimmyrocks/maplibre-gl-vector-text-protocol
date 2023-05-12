@@ -3,8 +3,9 @@ import { Topology } from 'topojson-specification'
 import * as csv2geojson from 'csv2geojson';
 import { feature as topojsonFeature } from 'topojson-client';
 import * as toGeoJson from '@tmcw/togeojson';
+import osm2geojson from 'osm2geojson-lite';
 
-export const supportedFormats = ['topojson', 'kml', 'gpx', 'tcx', 'csv', 'tsv'] as const;
+export const supportedFormats = ['topojson', 'osm', 'kml', 'gpx', 'tcx', 'csv', 'tsv'] as const;
 export type supportedFormatsType = typeof supportedFormats[number];
 
 
@@ -19,6 +20,7 @@ export class Converter {
 
         const converters: { [key: string]: () => Promise<FeatureCollection> } = {
             'topojson': this.loadTopoJson,
+            'osm': this.loadOsm,
             'kml': this.loadXml,
             'gpx': this.loadXml,
             'tcx': this.loadXml,
@@ -119,4 +121,11 @@ export class Converter {
         }
         return result;
     };
+
+    /**
+     * Loads OSM data and converts it into a GeoJSON FeatureCollection
+     */
+    async loadOsm(): Promise<FeatureCollection> {
+        return osm2geojson(this._rawData) as FeatureCollection;
+    }
 }
