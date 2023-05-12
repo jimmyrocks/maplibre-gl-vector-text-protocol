@@ -1,15 +1,15 @@
 // rollup.config.js
 
 import merge from 'deepmerge';
-import { terser } from "rollup-plugin-terser";
-import { default as typescript } from 'rollup-plugin-typescript2';
+import terser from "@rollup/plugin-terser";
+import typescript from 'rollup-plugin-typescript2';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import webWorkerLoader from 'rollup-plugin-web-worker-loader';
 
-import fs from 'fs';
+import { readFileSync } from 'fs';
 
-const name = JSON.parse(fs.readFileSync('package.json')).name;
+const name = JSON.parse(readFileSync('package.json')).name;
 const env = process.env.NODE_ENV  || 'development';
 
 const baseConfig = {
