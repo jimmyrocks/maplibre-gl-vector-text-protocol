@@ -1,9 +1,9 @@
 # maplibre-gl-vector-text-protocol
-Supports geospatial text based vector data using [Maplibregl.js](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
+Supports geospatial text based vector data using [MapLibre GL JS](https://github.com/maplibre/maplibre-gl-js) in v1.15.0 or later.
 
 It makes use of the [addProtocol](https://github.com/maplibre/maplibre-gl-js/pull/30) functionality that was added in version [1.15.0](https://github.com/maplibre/maplibre-gl-js/releases/tag/v1.15.0).
 
-It can be used with MapboxGLJS 1.x.x using the [mapbox-gl-custom-protocol](https://www.github.com/jimmyrocks/mapbox-gl-custom-protocol) library. I haven't tested it with MapboxGLJS 2+.
+It can be used with Mapbox GL JS 1.x.x using the [mapbox-gl-custom-protocol](https://www.github.com/jimmyrocks/mapbox-gl-custom-protocol) library. I haven't tested it with Mapbox GL JS 2+.
 
 Web workers are used to convert `CSV`, `TSV`, `Topojson`, and `OSM` formats. `KML`, `GPX`, and `TCX` formats are based on XML and use the [DOMParser](https://developer.mozilla.org/en-US/docs/Web/API/DOMParser), which isn't available to web workers, so they are converted to GeoJSON in the main thread.
 
@@ -17,7 +17,7 @@ Web workers are used to convert `CSV`, `TSV`, `Topojson`, and `OSM` formats. `KM
 * [`TSV`](https://en.wikipedia.org/wiki/Tab-separated_values) - **T**ab-**S**eparated **V**alue - Same as CSV, but it forces the delimiter to be a tab character (\t).
 
 ## Objective ✨
-The [`addProtocol`](https://github.com/maplibre/maplibre-gl-js/blob/492bec58c5684609af8fba81ef01e5f5a3ef0711/src/index.js#L177) feature makes it extremely easy to extend the existing functionality of Maplibre sources without creating a new source type using the [addSourceType](https://github.com/maplibre/maplibre-gl-js/blob/d375def728d23b9d443a4dcaab0fd06df912223e/src/ui/map.ts#L1583) feature. This makes it very easy to support all kinds of new things in Maplibre. 
+The [`addProtocol`](https://github.com/maplibre/maplibre-gl-js/blob/492bec58c5684609af8fba81ef01e5f5a3ef0711/src/index.js#L177) feature makes it extremely easy to extend the existing functionality of MapLibre sources without creating a new source type using the [addSourceType](https://github.com/maplibre/maplibre-gl-js/blob/d375def728d23b9d443a4dcaab0fd06df912223e/src/ui/map.ts#L1583) feature. This makes it very easy to support all kinds of new things in MapLibre. 
 
 ## Inspiration 💡
 I have worked on many projects where users want to add their own data to a map, but their data is rarely in the right format. This library makes it as easy as adding a `csv://` before the file path to bring a csv file in.
@@ -31,7 +31,7 @@ This project would not be possible if it weren't for three core libraries that d
 * `topojson-client` - From [Mike Bostock](https://github.com/mbostock) - `Topojson` support
 * `osm2geojson-lite` - From [tibetty](https://github.com/tibetty/osm2geojson-lite) - `osm2geojson-lite` support
 
-I'd also like to thank the Mapbox🚀 and Maplibre teams for creating such a great project that is easily extendable.
+I'd also like to thank the Mapbox🚀 and MapLibre teams for creating such a great project that is easily extendable.
 
 ## Usage 🛠️
 
