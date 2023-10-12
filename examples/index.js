@@ -61,7 +61,7 @@ map.on('load', () => {
 
     // OSM polygon (json)
     const osmSourceName = 'marsh (osm polygon json)';
-    const osmLink = 'osm://https://www.openstreetmap.org/api/0.6/relation/5544086/full.json'
+    const osmLink = 'osm://https://api.openstreetmap.org/api/0.6/relation/5544086/full.json'
     map.addSource(osmSourceName, {
         'type': 'geojson',
         'data': osmLink,
@@ -81,7 +81,7 @@ map.on('load', () => {
 
     // OSM line (xml)
     const osmLineSourceName = 'madison ave (osm line xml)';
-    const osmLineLink = 'osm://https://www.openstreetmap.org/api/0.6/relation/968291/full'
+    const osmLineLink = 'osm://https://api.openstreetmap.org/api/0.6/relation/968291/full'
     map.addSource(osmLineSourceName, {
         'type': 'geojson',
         'data': osmLineLink,
