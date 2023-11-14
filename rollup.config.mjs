@@ -10,8 +10,8 @@ import webWorkerLoader from 'rollup-plugin-web-worker-loader';
 
 import { readFileSync } from 'fs';
 
-const name = JSON.parse(readFileSync('package.json')).name;
-const env = process.env.NODE_ENV  || 'development';
+const {name, main, module, browser} = JSON.parse(readFileSync('package.json'));
+const env = process.env.NODE_ENV || 'development';
 
 const baseConfig = {
   input: './src/index.ts',
@@ -28,13 +28,13 @@ const configs = [{
   environments: ['development', 'production'],
   output: {
     format: 'umd',
-    file: `./dist/${name}.js`
+    file: main
   }
 }, {
   environments: ['production'],
   output: {
     format: 'umd',
-    file: `./dist/${name}.min.js`,
+    file: browser,
     sourcemap: true
   },
   plugins: [terser()]
@@ -42,11 +42,11 @@ const configs = [{
   environments: ['production'],
   output: {
     format: 'esm',
-    file: `./dist/${name}.es.js`
+    file: module
   }
 }]
   .filter(config => config.environments === undefined || config.environments.indexOf(env) > -1)
-  .map(config => {delete config.environments; return config;})
+  .map(config => { delete config.environments; return config; })
   .map(config => merge(baseConfig, config));
 
 console.log(configs);
