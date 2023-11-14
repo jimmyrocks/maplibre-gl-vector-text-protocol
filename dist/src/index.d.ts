@@ -1,5 +1,6 @@
 import { RequestParameters, ResponseCallback, default as MapLibrary } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
+import { supportedOptions } from './converter';
 /**
  * The VectorTextProtocol function handles requests for vector data and returns a Promise with the
  * response callback function.
@@ -11,6 +12,7 @@ import { FeatureCollection } from 'geojson';
 export declare const VectorTextProtocol: (requestParameters: RequestParameters, callback: ResponseCallback<FeatureCollection>) => {
     cancel: () => void;
 };
+export declare const addOptions: (url: string | URL, options: supportedOptions) => string | URL;
 /**
  * Add the vector text protocol to a map library for each supported format.
  * @param mapLibrary - The MapLibrary object to add the protocols to.

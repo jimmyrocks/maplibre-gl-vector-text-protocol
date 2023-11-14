@@ -1,11 +1,21 @@
-import { FeatureCollection } from 'geojson';
-export declare const supportedFormats: readonly ["topojson", "osm", "kml", "gpx", "tcx", "csv", "tsv"];
+import { FeatureCollection, GeoJsonProperties } from 'geojson';
+import * as csv2geojson from 'csv2geojson';
+export declare const supportedFormats: readonly ["topojson", "osm", "kml", "gpx", "tcx", "csv", "tsv", "polyline"];
 export type supportedFormatsType = typeof supportedFormats[number];
+export type supportedOptions = {
+    csvOptions?: csv2geojson.csvOptions;
+    polylineOptions?: {
+        precision?: number;
+        properties?: GeoJsonProperties;
+        type?: 'point' | 'line' | 'polygon';
+    };
+};
 export declare class Converter {
     _conversionFn: () => Promise<FeatureCollection>;
     _rawData: string;
     _format: supportedFormatsType;
-    constructor(format: supportedFormatsType, data: string);
+    _options: supportedOptions;
+    constructor(format: supportedFormatsType, data: string, options?: supportedOptions);
     /**
      * Creates a blank GeoJSON feature collection.
      * @returns A new GeoJSON feature collection with no features.
@@ -24,10 +34,17 @@ export declare class Converter {
     loadCsv(): Promise<FeatureCollection>;
     /**
      * Loads TopoJSON data and converts it into a GeoJSON FeatureCollection
+     * @returns A Promise that resolves with the GeoJSON FeatureCollection.
      */
     loadTopoJson(): Promise<FeatureCollection>;
     /**
      * Loads OSM data and converts it into a GeoJSON FeatureCollection
+     * @returns A Promise that resolves with the GeoJSON FeatureCollection.
      */
     loadOsm(): Promise<FeatureCollection>;
+    /**
+     * Loads and parses Polyline data into a GeoJSON FeatureCollection.
+     * @returns A Promise that resolves with the GeoJSON FeatureCollection.
+     */
+    loadPolyline(): Promise<FeatureCollection>;
 }

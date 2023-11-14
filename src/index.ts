@@ -5,7 +5,7 @@ import {
 } from 'maplibre-gl';
 
 import { FeatureCollection } from 'geojson';
-import { Converter, supportedFormatsType, supportedFormats } from './converter';
+import { Converter, supportedFormatsType, supportedFormats, supportedOptions } from './converter';
 import { Actor } from './worker/actor';
 
 // Make sure we can support workers in the current browser / runtime
@@ -37,17 +37,33 @@ const checkUrl = (url: string): string | undefined => {
  * @returns A geojson FeatureCollection (or undefined)
  */
 async function processData(url: string, prefix: supportedFormatsType, controller?: AbortController): Promise<FeatureCollection | undefined> {
-    const response = await fetch(url, controller ? { signal: controller.signal } : undefined)
+    const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
+
+    let options = {};
+    try {
+        // Parse the URL
+        const urlObject = new URL(url, window.location.href);
+
+        // Extract the hash (including the "#" symbol)
+        const hash = urlObject.hash;
+
+        // Remove the "#" symbol from the hash and decode it
+        const decodedHash = decodeURIComponent(hash.slice(1)); // Remove the "#" symbol
+
+        options = JSON.parse(decodedHash);
+    } catch (error) {
+        console.warn('Error parsing or reading URL:', error);
+    }
 
     if (response.status == 200) {
         const rawData = await response.text();
         let convertPromise;
         if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0 || !supportsWorkers()) {
             // XML uses the DOM, which isn't available to web workers
-            const converter = new Converter(prefix, rawData);
+            const converter = new Converter(prefix, rawData, options);
             convertPromise = converter.convert();
         } else {
-            const converter = new Actor('Converter', [prefix, rawData]);
+            const converter = new Actor('Converter', [prefix, rawData, options]);
             convertPromise = converter.exec('convert')();
         }
         return await convertPromise;
@@ -81,6 +97,22 @@ export const VectorTextProtocol = (requestParameters: RequestParameters, callbac
     // Allow the request to be cancelled
     return { cancel: () => { controller.abort() } };
 };
+
+export const addOptions = (url: string | URL, options: supportedOptions) => {
+    try {
+        // Parse the original URL
+        const urlObject = new URL(url);
+
+        // Set the hash property with the GeoJSON data
+        urlObject.hash = `#${encodeURIComponent(JSON.stringify(options))}`;
+
+        // Convert the updated URL object back to a string
+        return urlObject.toString();
+    } catch (error) {
+        console.error('Error parsing or updating URL:', error);
+        return url; // Return the original URL if there's an error
+    }
+}
 
 /**
  * Add the vector text protocol to a map library for each supported format.
