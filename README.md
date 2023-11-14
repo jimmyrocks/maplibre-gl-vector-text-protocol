@@ -25,8 +25,8 @@ I have worked on many projects where users want to add their own data to a map, 
 There are a lot of [Geospatial File Formats](https://en.wikipedia.org/wiki/GIS_file_formats#Vector) out there, this library is intended to serve the most common formats (CSV, KML, GPX, Topojson, OSM) without creating a huge library. There are other formats I would like to support, but they will be available in different libraries.
 
 ## External Libraries 📚
-This project would not be possible if it weren't for three core libraries that drive it:
-* `@tmcw/togeojson` - Supported by [placemark.io](https:placemark.io) - `KML`, `GPX`, `TCX` support
+This project would not be possible if it weren't for the core libraries that drive it:
+* `@tmcw/togeojson` - Supported by [placemark.io](https://placemark.io) - `KML`, `GPX`, `TCX` support
 * `csv2geojson` - Supported by [Mapbox](https://mapbox.com) - `CSV`, `TSV` support
 * `topojson-client` - From [Mike Bostock](https://github.com/mbostock) - `Topojson` support
 * `osm2geojson-lite` - From [tibetty](https://github.com/tibetty/osm2geojson-lite) - `osm2geojson-lite` support
