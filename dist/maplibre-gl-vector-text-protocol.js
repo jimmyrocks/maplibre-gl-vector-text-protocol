@@ -3407,15 +3407,20 @@
 	    try {
 	        // Parse the URL
 	        const urlObject = new URL(url, window.location.href);
-	        // Extract the hash (including the "#" symbol)
-	        const hash = urlObject.hash;
-	        // Remove the "#" symbol from the hash and decode it
-	        const decodedHash = decodeURIComponent(hash.slice(1)); // Remove the "#" symbol
-	        options = JSON.parse(decodedHash);
+	        if (urlObject.hash.length) {
+	            // Extract the hash (including the "#" symbol)
+	            const hash = urlObject.hash;
+	            // Remove the "#" symbol from the hash and decode it
+	            const decodedHash = decodeURIComponent(hash.slice(1)); // Remove the "#" symbol
+	            try {
+	                options = JSON.parse(decodedHash);
+	            }
+	            catch (e) {
+	                console.warn('Error parsing or reading URL:', e);
+	            }
+	        }
 	    }
-	    catch (error) {
-	        console.warn('Error parsing or reading URL:', error);
-	    }
+	    finally { }
 	    if (response.status == 200) {
 	        const rawData = await response.text();
 	        let convertPromise;
@@ -3434,27 +3439,71 @@
 	        throw (new Error(`Data fetch error: ${response.statusText}`));
 	    }
 	}
+	const processUrl = (url) => {
+	    const prefix = url.split('://')[0];
+	    const replacedUrl = url.replace(new RegExp(`^${prefix}://`), '');
+	    // Apply the Safari fix (if needed) to the URL
+	    const cleanUrl = needsUrlCheck ? checkUrl(replacedUrl) : replacedUrl;
+	    return { prefix, url: cleanUrl };
+	};
 	/**
-	 * The VectorTextProtocol function handles requests for vector data and returns a Promise with the
-	 * response callback function.
-	 * Modeled after this: https://github.com/maplibre/maplibre-gl-js/blob/ddf69421c6ae34c808afefec309a5beecdb7500e/src/index.ts#L151
-	 * @param requestParameters - The request parameters containing the URL of the resource.
-	 * @param callback - The function to be called when the response is available.
-	 * @returns An object with the cancel function.
+	 * Handles the Vector Text Protocol for version 4.
+	 *
+	 * @param requestParameters - The parameters for the request including the URL.
+	 * @param controller - An AbortController instance to manage the request lifecycle.
+	 * @returns A promise resolving to a GetResourceResponse containing a FeatureCollection or undefined.
+	 * @throws Will throw an error if the URL is invalid or if any other error occurs during data processing.
 	 */
-	const VectorTextProtocol = (requestParameters, callback) => {
+	const VectorTextProtocolV4 = async (requestParameters, controller) => {
+	    const { prefix, url } = processUrl(requestParameters.url);
+	    if (url) {
+	        try {
+	            // Process the data and return the response
+	            const data = await processData(url, prefix, controller);
+	            return { data };
+	        }
+	        catch (e) {
+	            // Catch and rethrow errors with additional context
+	            throw new Error(e || 'Unknown Error');
+	        }
+	    }
+	    else {
+	        // Handle invalid URL case
+	        throw new Error('Invalid URL: ' + requestParameters.url);
+	    }
+	};
+	/**
+	 * Handles the Vector Text Protocol for version 3.
+	 *
+	 * @param requestParameters - The parameters for the request including the URL.
+	 * @param callback - A callback function to handle the response or error.
+	 * @returns An object with a cancel function to abort the request.
+	 */
+	const VectorTextProtocolV3 = (requestParameters, callback) => {
 	    const controller = new AbortController();
-	    const prefix = requestParameters.url.split('://')[0];
-	    const url = requestParameters.url.replace(new RegExp(`^${prefix}://`), '');
-	    // Apply the Safari fix
-	    const cleanUrl = needsUrlCheck ? checkUrl(url) : url;
-	    if (cleanUrl) {
-	        processData(cleanUrl, prefix, controller)
+	    const { prefix, url } = processUrl(requestParameters.url);
+	    if (url) {
+	        processData(url, prefix, controller)
 	            .then(data => callback(null, data))
 	            .catch(e => callback(e));
 	    }
-	    // Allow the request to be cancelled
+	    // Return an object with a cancel method to abort the request
 	    return { cancel: () => { controller.abort(); } };
+	};
+	/**
+	 * Selects the appropriate Vector Text Protocol version based on the type of controller provided.
+	 *
+	 * @param requestParameters - The parameters for the request including the URL.
+	 * @param controller - Either an AbortController or a callback function.
+	 * @returns Either a Promise for V4 or an object with a cancel method for V3.
+	 */
+	const VectorTextProtocol = (requestParameters, controller) => {
+	    if (controller instanceof AbortController) {
+	        return VectorTextProtocolV4(requestParameters, controller);
+	    }
+	    else {
+	        return VectorTextProtocolV3(requestParameters, controller);
+	    }
 	};
 	const addOptions = (url, options) => {
 	    try {
@@ -3479,9 +3528,11 @@
 	        mapLibrary.addProtocol(type, VectorTextProtocol);
 	    });
 	};
+	const vectorFormats = supportedFormats;
 
 	exports.VectorTextProtocol = VectorTextProtocol;
 	exports.addOptions = addOptions;
 	exports.addProtocols = addProtocols;
+	exports.vectorFormats = vectorFormats;
 
 }));

@@ -1,7 +1,7 @@
 {
     "name": "maplibre-gl-vector-text-protocol",
-    "version": "0.0.3",
-    "description": "Allows various text based vector formats to be used with maplibre",
+    "version": "0.0.4",
+    "description": "Allows various text based vector formats to be used with maplibre gl js",
     "keywords": [
         "maplibre",
         "topojson",
@@ -18,6 +18,7 @@
     "main": "dist/maplibre-gl-vector-text-protocol.js",
     "module": "dist/maplibre-gl-vector-text-protocol.esm.js",
     "browser": "dist/maplibre-gl-vector-text-protocol.min.js",
+    "types": "dist/src/index.d.ts",
     "files": [
         "dist"
     ],
@@ -32,18 +33,18 @@
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^25.0.7",
-        "@rollup/plugin-json": "^6.0.1",
+        "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
-        "@types/geojson": "^7946.0.13",
+        "@types/geojson": "^7946.0.14",
         "@types/mapbox__polyline": "^1.0.5",
         "@types/topojson": "^3.2.6",
-        "maplibre-gl": "^3.6.1",
-        "rollup": "^4.4.1",
+        "maplibre-gl": "^4.0.0",
+        "rollup": "^4.10.0",
         "rollup-plugin-sourcemaps": "^0.6.3",
         "rollup-plugin-typescript2": "^0.36.0",
         "rollup-plugin-web-worker-loader": "^1.6.1",
-        "typescript": "^5.2.2"
+        "typescript": "^5.3.3"
     },
     "overrides": {
         "rollup-plugin-web-worker-loader": {

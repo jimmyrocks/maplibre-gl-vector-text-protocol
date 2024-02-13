@@ -8,10 +8,27 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import webWorkerLoader from 'rollup-plugin-web-worker-loader';
 
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync, writeFileSync } from 'fs';
 
-const {name, main, module, browser} = JSON.parse(readFileSync('package.json'));
+const { main, module, browser, devDependencies } = JSON.parse(readFileSync('package.json'));
 const env = process.env.NODE_ENV || 'development';
+
+const updateMaplibreVersion = () => {
+  const updateVersion = (fileContent) => {
+    const maplibreVersion = devDependencies['maplibre-gl'].replace(/[\^~]/g, '');
+    const regex = /https:\/\/unpkg\.com\/maplibre-gl@[^]?\d+\.\d+\.\d+\/dist\/maplibre-gl/g;
+    const newVersionString = `https://unpkg.com/maplibre-gl@${maplibreVersion}/dist/maplibre-gl`;
+    return fileContent.replace(regex, newVersionString);
+  };
+  readdirSync('./examples').map(item => {
+    if (item.match(/.+?\.html/) && item !== 'indexv3.html') {
+      const fileContent = readFileSync('./examples/' + item, { encoding: 'utf8', flag: 'r' });
+      const newFileContent = updateVersion(fileContent);
+      writeFileSync('./examples/' + item, newFileContent);
+    }
+  });
+};
+updateMaplibreVersion();
 
 const baseConfig = {
   input: './src/index.ts',

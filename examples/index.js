@@ -1,4 +1,4 @@
-import { addProtocols, addOptions } from "../dist/maplibre-gl-vector-text-protocol.es.js";
+import { addProtocols } from "../dist/maplibre-gl-vector-text.esm.js";
 import { default as layerSelector } from "./layerSelector.js";
 
 

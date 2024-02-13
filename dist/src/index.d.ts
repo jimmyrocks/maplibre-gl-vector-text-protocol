@@ -1,15 +1,14 @@
-import { RequestParameters, ResponseCallback, default as MapLibrary } from 'maplibre-gl';
+import { RequestParameters, default as MapLibrary, GetResourceResponse } from 'maplibre-gl';
 import { FeatureCollection } from 'geojson';
 import { supportedOptions } from './converter';
 /**
- * The VectorTextProtocol function handles requests for vector data and returns a Promise with the
- * response callback function.
- * Modeled after this: https://github.com/maplibre/maplibre-gl-js/blob/ddf69421c6ae34c808afefec309a5beecdb7500e/src/index.ts#L151
- * @param requestParameters - The request parameters containing the URL of the resource.
- * @param callback - The function to be called when the response is available.
- * @returns An object with the cancel function.
+ * Selects the appropriate Vector Text Protocol version based on the type of controller provided.
+ *
+ * @param requestParameters - The parameters for the request including the URL.
+ * @param controller - Either an AbortController or a callback function.
+ * @returns Either a Promise for V4 or an object with a cancel method for V3.
  */
-export declare const VectorTextProtocol: (requestParameters: RequestParameters, callback: ResponseCallback<FeatureCollection>) => {
+export declare const VectorTextProtocol: (requestParameters: RequestParameters, controller: AbortController | ((e: string | null, d?: FeatureCollection) => void)) => Promise<GetResourceResponse<FeatureCollection | undefined>> | {
     cancel: () => void;
 };
 export declare const addOptions: (url: string | URL, options: supportedOptions) => string | URL;
@@ -18,3 +17,5 @@ export declare const addOptions: (url: string | URL, options: supportedOptions) 
  * @param mapLibrary - The MapLibrary object to add the protocols to.
  */
 export declare const addProtocols: (mapLibrary: typeof MapLibrary) => void;
+export declare const vectorFormats: readonly ["topojson", "osm", "kml", "gpx", "tcx", "csv", "tsv", "polyline"];
+export { supportedFormatsType } from './converter';

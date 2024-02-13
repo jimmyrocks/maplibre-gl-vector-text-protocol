@@ -1,3 +1,4 @@
+/// <reference path="../../../../../src/custom.d.ts" />
 import { FeatureCollection, GeoJsonProperties } from 'geojson';
 import * as csv2geojson from 'csv2geojson';
 export declare const supportedFormats: readonly ["topojson", "osm", "kml", "gpx", "tcx", "csv", "tsv", "polyline"];
