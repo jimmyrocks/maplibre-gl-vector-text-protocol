@@ -2,7 +2,7 @@
     "name": "maplibre-gl-vector-text-protocol",
     "version": "0.0.4",
     "description": "Allows various text based vector formats to be used with maplibre gl js",
-    "keywords": [
+        "keywords": [
         "maplibre",
         "topojson",
         "osm",
@@ -13,7 +13,7 @@
         "tsv",
         "convert"
     ],
-    "author": "James McAndrew <jim@loc8.us>",
+    "author": "James McAndrew <james_mcandrew@partner.nps.gov>",
     "license": "MIT",
     "main": "dist/maplibre-gl-vector-text-protocol.js",
     "module": "dist/maplibre-gl-vector-text-protocol.esm.js",
@@ -29,7 +29,7 @@
         "build-prod": "NODE_ENV=production npm run build",
         "build": "npm run clean && rollup -c rollup.config.mjs",
         "watch": "npm run clean && rollup -c rollup.config.mjs --watch",
-        "test": "jest"
+        "test": "echo 'no tests available'"
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^25.0.7",
@@ -39,12 +39,12 @@
         "@types/geojson": "^7946.0.14",
         "@types/mapbox__polyline": "^1.0.5",
         "@types/topojson": "^3.2.6",
-        "maplibre-gl": "^4.0.0",
-        "rollup": "^4.10.0",
+        "maplibre-gl": "^4.1.3",
+        "rollup": "^4.17.0",
         "rollup-plugin-sourcemaps": "^0.6.3",
         "rollup-plugin-typescript2": "^0.36.0",
         "rollup-plugin-web-worker-loader": "^1.6.1",
-        "typescript": "^5.3.3"
+        "typescript": "^5.4.5"
     },
     "overrides": {
         "rollup-plugin-web-worker-loader": {

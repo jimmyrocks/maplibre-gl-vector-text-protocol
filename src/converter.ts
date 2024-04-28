@@ -24,7 +24,6 @@ export class Converter {
     _format: supportedFormatsType;
     _options: supportedOptions;
 
-
     constructor(format: supportedFormatsType, data: string, options: supportedOptions = {}) {
         this._rawData = data;
         this._format = format;
@@ -151,7 +150,7 @@ export class Converter {
     async loadPolyline(): Promise<FeatureCollection> {
         let options = this._options.polylineOptions || {};
 
-        // Use the csv2geojson library to convert the CSV to GeoJSON
+        // Use the @mapbox/polyline library to convert the polyline to GeoJSON
         const geojson = await new Promise<FeatureCollection>((resolve, reject) => {
             try {
                 const lineString = polylineToGeoJSON(this._rawData, options.precision);

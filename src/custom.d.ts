@@ -4,7 +4,6 @@ declare module '@tmcw/togeojson' {
     export function tcx(doc: Document): FeatureCollection;
 }
 
-
 declare module 'csv2geojson' {
     export interface csvOptions {
         'latfield'?: string,
