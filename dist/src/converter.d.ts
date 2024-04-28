@@ -49,3 +49,4 @@ export declare class Converter {
      */
     loadPolyline(): Promise<FeatureCollection>;
 }
+//# sourceMappingURL=converter.d.ts.map

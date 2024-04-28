@@ -32,3 +32,4 @@ export declare class Actor {
      */
     get(command: string): Promise<any>;
 }
+//# sourceMappingURL=actor.d.ts.map

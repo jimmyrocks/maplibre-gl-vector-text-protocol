@@ -8,3 +8,4 @@ export interface MessageData {
 declare const subClasses: readonly ["Converter"];
 export type SubClasses = typeof subClasses[number];
 export {};
+//# sourceMappingURL=worker.d.ts.map
