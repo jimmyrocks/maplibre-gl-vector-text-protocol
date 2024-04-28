@@ -5,17 +5,17 @@
         <meta charset="utf-8" />
         <title>Display a map with an XML, CSV, or TopoJSON Overlay</title>
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <script src="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.js"></script>
-        <link href="https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.css" rel="stylesheet" />
-        <script src="../dist/maplibre-gl-vector-text-protocol.js"></script>
+        <script src="https://unpkg.com/maplibre-gl@4.1.3/dist/maplibre-gl.js"></script>
+        <link href="https://unpkg.com/maplibre-gl@4.1.3/dist/maplibre-gl.css" rel="stylesheet" />
+        <script src="../dist/maplibre-gl-vector-text-protocol.min.js"></script>
         <link href="./index.css" rel="stylesheet" />
-    </head>
+    </head>ß
     <body>
         <div id="map"></div>
     </body>
     <script>
         const map = new maplibregl.Map({
-            container: 'map', // container id
+            container: 'map', // container idß
             style: 'https://demotiles.maplibre.org/style.json', // style URL
             center: [-95, 37.5], // starting position [lng, lat]
             zoom: 3 // starting zoom

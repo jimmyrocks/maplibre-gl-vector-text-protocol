@@ -1,7 +1,6 @@
 import { addProtocols } from "../dist/maplibre-gl-vector-text-protocol.esm.js";
 import { default as layerSelector } from "./layerSelector.js";
 
-
 const map = new maplibregl.Map({
   container: 'map', // container id
   style: 'https://demotiles.maplibre.org/style.json', // style URL
