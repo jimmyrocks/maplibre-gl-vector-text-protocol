@@ -1,6 +1,6 @@
 {
     "name": "maplibre-gl-vector-text-protocol",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Allows various text based vector formats to be used with maplibre gl js",
         "keywords": [
         "maplibre",

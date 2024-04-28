@@ -42,8 +42,8 @@ I'd also like to thank the Mapbox🚀 and MapLibre teams for creating such a gre
 VectorTextProtocol.addProtocols(maplibregl);
 
 // Individual protocols can be added as well
-maplibregl.addProtocol('csv', VectorTextProtocol);
-maplibregl.addProtocol('kml', VectorTextProtocol);
+maplibregl.addProtocol('csv', VectorTextProtocol.VectorTextProtocol);
+maplibregl.addProtocol('kml', VectorTextProtocol.VectorTextProtocol);
 ```
 
 ## Examples ⚙️
