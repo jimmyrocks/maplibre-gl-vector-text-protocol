@@ -36,34 +36,35 @@ const checkUrl = (url: string): string | undefined => {
  * @param controller - optional controller that can be used to cancel a request
  * @returns A geojson FeatureCollection (or undefined)
  */
-async function processData(url: string, prefix: supportedFormatsType, controller?: AbortController): Promise<FeatureCollection | undefined> {
+export async function processData(url: string, prefix: supportedFormatsType, controller?: AbortController): Promise<FeatureCollection | undefined> {
     const response = await fetch(url, controller ? { signal: controller.signal } : undefined);
 
     let options = {};
-    try {
-        // Parse the URL
-        const urlObject = new URL(url, window.location.href);
 
-        if (urlObject.hash.length) {
-            // Extract the hash (including the "#" symbol)
-            const hash = urlObject.hash;
+    // Parse the URL
+    const urlObject = new URL(url, window.location.href);
 
-            // Remove the "#" symbol from the hash and decode it
-            const decodedHash = decodeURIComponent(hash.slice(1)); // Remove the "#" symbol
+    if (urlObject.hash.length) {
+        // Extract the hash (including the "#" symbol)
+        const hash = urlObject.hash;
 
-            try {
-                options = JSON.parse(decodedHash);
-            } catch (e) {
-                console.warn('Error parsing or reading URL:', e);
-            }
+        // Remove the "#" symbol from the hash and decode it
+        const decodedHash = decodeURIComponent(hash.slice(1)); // Remove the "#" symbol
+
+        try {
+            options = JSON.parse(decodedHash);
+        } catch (e) {
+            console.warn('Error parsing or reading URL:', e);
         }
-    } finally { }
+    }
 
     if (response.status == 200) {
         const rawData = await response.text();
         let convertPromise;
-        if (['kml', 'tcx', 'gpx'].indexOf(prefix) >= 0 || !supportsWorkers()) {
+        const usesDOM = (['kml', 'tcx', 'gpx'].includes(prefix));
+        if (usesDOM || !supportsWorkers()) {
             // XML uses the DOM, which isn't available to web workers
+            // It is possible to use xmldom to do this, but that increases the bundle size by 3x
             const converter = new Converter(prefix, rawData, options);
             convertPromise = converter.convert();
         } else {
@@ -76,7 +77,12 @@ async function processData(url: string, prefix: supportedFormatsType, controller
     }
 };
 
-
+/**
+ * Processes the URL and returns the prefix and cleaned URL.
+ * 
+ * @param url - The URL to process.
+ * @returns An object with the prefix and cleaned URL.
+ */
 const processUrl = (url: string) => {
     const prefix = url.split('://')[0] as supportedFormatsType;
     const replacedUrl = url.replace(new RegExp(`^${prefix}://`), '');
@@ -157,6 +163,13 @@ export const VectorTextProtocol = (
     }
 }
 
+/**
+ * Add options to a URL for the Vector Text Protocol.
+ * 
+ * @param url - The URL to add options to.
+ * @param options - The options to add to the URL.
+ * @returns A string with the updated URL.
+ */
 export const addOptions = (url: string | URL, options: supportedOptions) => {
     try {
         // Parse the original URL
